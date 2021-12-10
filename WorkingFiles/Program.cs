@@ -13,27 +13,25 @@ class Program
         var salesTotalDirectory = Path.Combine(currentDirectory, "salesTotalDirectory");
         Directory.CreateDirectory(salesTotalDirectory);
 
-        var salesFiles = FindFiles(storesDirectory);
-
-        var salesTotal = CalculateSalesTotal(salesFiles);
-
-        File.AppendAllText(Path.Combine(salesTotalDirectory, "totals.txt"), $"{salesTotal}{Environment.NewLine}");
-
-
-        IEnumerable<string> FindFiles(string folderName)
-        {
-            List<string> salesFiles = new List<string>();
-
-            var foundFiles = Directory.EnumerateFiles(folderName, "*", SearchOption.AllDirectories);
-            
-            foreach (var file in foundFiles)
+            foreach (var file in salesFiles)
             {
-                var extension = Path.GetExtension(file);
-                if (extension == ".json")
-                {
-                    salesFiles.Add(file);
-                }
+                Console.WriteLine(file);
             }
+
+            IEnumerable<string> FindFiles(string folderName)
+            {
+                List<string> salesFiles = new List<string>();
+
+                var foundFiles = Directory.EnumerateFiles(folderName, "*", SearchOption.AllDirectories);
+
+                foreach (var file in foundFiles)
+                {
+                    // The file name will contain the full path, so only check the end of it
+                    if (file.EndsWith("sales.json"))
+                    {
+                        salesFiles.Add(file);
+                    }
+                }
 
             return salesFiles;
         }
@@ -56,8 +54,6 @@ class Program
                 salesTotal += data?.Total ?? 0;
             }
 
-            return salesTotal;
         }
     }
-}
 
